@@ -157,7 +157,7 @@ view. This command can be issued in two different ways:
    one of them being *zoom*. Just select it.  
    
 Either of the two options above will produce the same effect: the
-lisozyme molecule will be back on screen, fully centered and filling
+lysozyme molecule will be back on screen, fully centered and filling
 most of the screen area.
 
 To change the molecule representation type, we can use the "S" button
@@ -228,7 +228,7 @@ files, unless you specify otherwise.
 
 Now let's represent 2vb1 as sticks:
 
-`as sticks, 2vb1'
+`as sticks, 2vb1`
 
 
 and let's load the second molecule, 3b0i, with the command:
@@ -313,26 +313,35 @@ atoms.
    protein and nucleic acids used by the Protein Data Bank, and based
    on the organic chemistry nomenclature for small molecules.
    
-   
-The PyMOL selection language uses "/" as a separator between levels.
-For example:
+
+The most general type of selection expression will be of the form:
+
+`/object/segment/chain/residue/atom`
+
+with the `/` being used as a separator between the identifiers of the 
+different levels.
+
+This specific example:
 
 `/2VB1/A/A/34/CE2`
    
-reference the object 2vb1 (normally the object code comes from the PDB
-code, as in this case), segment A, chain A, aminoacid residue 34, atom
-with name CE2 (carbon epsilon 2 on the phenylalanine ring).  This
-selection might have been used for instance in the following command:
+references the atome named `CE2` in residue number `34` of chain `A` 
+of segment `A` of object `2VB1`. This will be the carbon $\epsilon$2 of
+the phenylalanine ring in residue 34 of lysozyme. Note that the 
+object identifier (`2vb1` in this case) generaly comes from the name of the
+corresponding PDB file or code.
+
+This selection can be used for instance in the following console command:
 
 `zoom /2VB1/A/A/34/CE2`
 
-which brings atom CE2 of residue 34 of 2vb1 to the center of the
-screen. In this case the leading "/" can be omitted:
+which zooms in on the atom `CE2` of residue `34` of object `2vb1`, bringing 
+it to the center of the screen. In this case the leading `/` can be omitted:
 
 `zoom 2VB1/A/A/34/CE2`
 
-because PyMOL can guess the meaning of the above expression just from
-the four intervening slashes.
+because the four intervening `/` are enough for PyMOL to guess the 
+correct meaning of all the five identifiers. 
 
 Even more abbreviated representations are permitted, such as:
 
@@ -344,7 +353,7 @@ object with one chain loaded in PyMOL, so if you issue:
 
 `zoom 34/CA`
 
-the carbon alpha of residue 34 will be brought to the center of the
+the carbon alpha of residue `34` will be brought to the center of the
 screen.
 
 You can also use specifications of the type:
@@ -357,40 +366,45 @@ be used, for instance, in the following console command:
 `color red, 2vb1////CA`
 
 
-**NOTE:** selections in PyMOL that do not start with a "/" will
-require a trailing "/" if they end on residue name and number For
-example:
+**NOTE:** selections in PyMOL that do not start with a `/` will
+require a trailing `/` if they end on a residue identifer (name or
+nunmber). For example:
 
 `color green, 123/`
 
-will color green all atoms of residue 123 of all chains of all loaded
+will color green all atoms of residue `123` of all chains of all loaded
 objects, but:
 
 `color green, 123` 
 
-will produce an error message. On the other hand, if your selection
-expression starts with a "/", then the trailing "/" after a residue id
+will produce an error message. On the other hand, if a selection
+expression starts with a `/`, then the trailing `/` after a residue id
 won't be needed. For example:
 
-`color red, /2vb1///100' 
+`color red, /2vb1///100`
 
-will not produce an error. Of course this will require your selection
-expression to contain the correct sequence from right to left.  (one
-easy way to think about this to imagine that selections with a leading
-slash are read from left to right, and expressions with a trailing
-slash are read from right to left).
+will not produce an error. The sequence `///` is used to *omit* the segment
+and chain identifiers, ensuring that 100 really is at the correct position
+for a residue id. This means that a residue number in *any* segment or *any* 
+chain will be matched (in this case there will be only one match, because
+the `2vb1` object contains only one segment with a single chain). 
+
+**NOTE:** To better understand the difference between selection expressions
+with a leading or trailing `/`, think of it this ways: expressions with a leading
+`/` are read left to right, while expressions with a trailing `/` are 
+read right to left.
 
 The following expression:
 
-`color red, 100/CA/'
+`color red, 100/CA/`
 
-will produce an error - there cannot be anything after the atom description,
+will produce an error - there cannot be anything after the atom identifier,
 therefore the trailing "/" is invalid.
 
 The selection language allows for the specification of residue
 *ranges*.  For example, the command:
 
-'color red, 10-123/`
+`color red, 10-123/`
 
 will color all residues from 10 to 123. To specify non-contiguous
 ranges, the following notation can be used:
@@ -405,14 +419,15 @@ must note, however, that name specifications tend to be ambiguous, since
 there will be (in general) more than one residue with a given
 name. The following command, for instance:
 
-`color red, 2vb1//A/HIS/`
+`color red, //A/HIS/`
 
 will color red all histidine residues present in chains labeled "A" of
 all loaded objects. The command:
 
 `show spheres, 2vb1//A/ASP+GLU/`
 
-will show all aspartic and glutamic acid residues as spheres. 
+will show all aspartic and glutamic acid residues as spheres in chain 
+`A` of any segment of object `2vb1`. 
 
 
 **Exercise:** Represent the molecule 2vb1 as "ribbon". Color the
