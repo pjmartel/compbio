@@ -1,0 +1,14 @@
+# Coordinates generate by Meeko
+# cetering the box on the xtal ligand
+# and 10 A from the molecule extens to 
+# box face. PDB: 1IEP.pdb Ligand: STI
+receptor = 1iep_B.pdbqt
+center_x=13.171
+center_y=95.113
+center_z=58.594
+size_x =28.371
+size_y =34.476
+size_z =35.960
+exhaustiveness = 30
+energy_range = 100 
+num_modes = 10
